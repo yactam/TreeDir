@@ -1,7 +1,7 @@
 # TreeDir 
 [![Tools](https://skills.thijs.gg/icons?i=c,git,vscode,github,bash)](https://skills.thijs.gg)
 
-For the french version of readme click [![fr](https://img.shields.io/badge/lang-fr-blue.svg)](https://github.com/yactam/TreeDir/blob/master/README.fr.md)
+For the french version of readme click [![fr](https://img.shields.io/badge/lang-fr-blue.svg)](https://github.com/yactam/TreeDir/blob/main/README.fr.md)
 
 
 ## Description

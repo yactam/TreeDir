@@ -1,7 +1,7 @@
 # TreeDir 
 [![Tools](https://skills.thijs.gg/icons?i=c,git,vscode,github,bash)](https://skills.thijs.gg)
 
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/yactam/TreeDir/blob/master/README.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/yactam/TreeDir/blob/main/README.md)
 
 ## Description
 
