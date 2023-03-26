@@ -10,6 +10,10 @@ dossiers/fichiers. Le programme prendra en entrée un fichier contenant une list
 et devra simuler ces instructions en manipulant un 'arbre' stocké en mémoire. Le programme se déplacera
 dans l'arborescence, pourra créer des dossiers/fichiers, déplacer, copier ou supprimer des dossiers/fichiers.
 
+## Un exemple de la structure manipulée
+
+![example](Extras/example.png)
+
 ## Compiler
 
 Dans l'attente d'un fichier Makefile, lancer la commande:

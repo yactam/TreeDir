@@ -11,6 +11,10 @@ folders/files. The program will take as input a file containing a list of instru
 and will have to simulate these instructions by manipulating a 'tree' stored in memory. The program will move
 in the tree structure, will be able to create folders/files, move, copy or delete folders/files.
 
+## Example of the manipulated structure
+
+![example](Extras/example.png)
+
 ## Compile
 
 Waiting for a Makefile for now use:
