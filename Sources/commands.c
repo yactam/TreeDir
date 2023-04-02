@@ -41,7 +41,7 @@ noeud* cd_parent(noeud* n) {
 
 /**********************************/
 // Pour la commande cd
-noeud* cd() {
+noeud* cd(noeud* n) {
 	assert(n != NULL);
 	return n->racine;
 }
