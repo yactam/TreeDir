@@ -15,4 +15,6 @@ parser* init(char*, char);
 void free_parser(parser*);
 char* next(parser*);
 bool hasNext(parser*);
+bool isalphanum(char*);
+bool estvide(char*);
 

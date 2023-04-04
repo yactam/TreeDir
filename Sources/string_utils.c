@@ -1,4 +1,5 @@
 #include <string.h>
+#include <ctype.h>
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -14,6 +15,7 @@ parser* init(char* string, char delimiter) {
 	assert(memcpy(p->buffer, string, len * sizeof(char)) != NULL);
 	p->delimiter = delimiter;
 	p->next = 0;
+	if(*string == delimiter) p->next += 1;
 	p->tmp = malloc(sizeof(char));
 	assert(p->tmp != NULL);
 	return p;
@@ -40,9 +42,20 @@ char* next(parser* p) {
 		free(p->tmp);
 		p->tmp = ret;
 	} else {
-		ret = "";
+		ret = ""; // Pour signaler une erreure dans le chemin par ex: /Cours////ProjetC (plusieurs <</>> consecutifs)
 	}
 	p->next += l+1;
 	if(p->next >= strlen(p->buffer)) p->next = -1;
 	return ret;
+}
+
+bool isalphanum(char* s) {
+	for(size_t i = 0; i < strlen(s); ++i) {
+		if(!isalnum(s[i])) return false;
+	}
+	return true;
+}
+
+bool estvide(char* s) {
+	return strcmp(s, "") == 0;
 }

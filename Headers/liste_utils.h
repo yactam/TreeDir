@@ -1,22 +1,13 @@
-#include <stdbool.h>
+#ifndef _LISTE_UTILSH_
+#define _LISTE_UTILSH_
+#include "../Headers/commands.h"
 
-typedef struct noeud noeud;
-typedef struct liste_noeud liste_noeud;
-
-struct noeud {
-	bool est_dossier;
-	char nom[100];
-	noeud* pere;
-	noeud* racine;
-	liste_noeud* fils;
-}
-
-struct liste_noeud {
-	noeud* no;
-	liste_noeud* succ;
-}
-
+liste_noeud* create_liste(noeud*);
 void liste(liste_noeud*);
-liste_neoud* add(noeud*);
-liste_noeud* remove(noeud*);
-liste_noeud* rename(noeud*, char[100]);
+liste_noeud* add_liste(liste_noeud*, noeud*);
+liste_noeud* remove_liste(liste_noeud*, noeud*);
+liste_noeud* rename_liste(liste_noeud*, noeud*, char[100]);
+noeud* find_liste(liste_noeud*, char*);
+void free_liste(liste_noeud*);
+
+#endif
