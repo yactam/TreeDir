@@ -18,14 +18,14 @@ in the tree structure, will be able to create folders/files, move, copy or delet
 ## Compile
 
 Waiting for a Makefile for now use:
-```
-    $ gcc -Wall -o main Headers/commands Sources/main.c 
+```bash
+    $ gcc -Wall -o main Sources/commands.c Sources/string_utils.c Sources/liste_utils.c Sources/main.c 
 ```
 
 ## Execute 
 
 After compiling just run:
 
-```
+```bash
     $ ./main
 ```

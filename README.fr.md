@@ -18,7 +18,7 @@ dans l'arborescence, pourra créer des dossiers/fichiers, déplacer, copier ou s
 
 Dans l'attente d'un fichier Makefile, lancer la commande:
 ```bash
-    $ gcc -Wall -o main Headers/commands Sources/main.c 
+    $ gcc -Wall -o main Sources/commands.c Sources/string_utils.c Sources/liste_utils.c Sources/main.c 
 ```
 
 ## Exécuter
