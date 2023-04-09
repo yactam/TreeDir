@@ -75,3 +75,13 @@ void free_liste(liste_noeud* l) {
 		l = tmp;
 	}
 }
+
+void print_fils(liste_noeud* l) {
+	assert(l != NULL);
+	liste_noeud* tmp = l;
+	while(tmp->succ != NULL) {
+		printf("%s %s, ", tmp->no->nom, (tmp->no->est_un_dossier ? "(D)" : "(F)"));
+		tmp = tmp->succ;
+	}
+	printf("%s %s\n", tmp->no->nom, (tmp->no->est_un_dossier ? "(D)" : "(F)"));
+}

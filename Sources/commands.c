@@ -153,3 +153,16 @@ noeud* cp(noeud* n, char* src, char* dst){
 	return n;
 }
 /**********************************/
+void print(noeud* n) {
+	printf("Noeud %s ", n->nom);
+	if(n->est_un_dossier) printf("(D), ");
+	else printf("(F), ");
+	printf("pere: %s, ", n->pere->nom);
+	printf("fils: ");
+	print_fils(n->fils);
+	for(liste_noeud* f = n->fils; f != NULL; f = f->succ) {
+		print(f->no);
+		printf("\n");
+	}
+}
+
