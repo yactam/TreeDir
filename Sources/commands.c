@@ -154,15 +154,15 @@ noeud* cp(noeud* n, char* src, char* dst){
 }
 /**********************************/
 void print(noeud* n) {
-	printf("Noeud %s ", n->nom);
+	printf("Noeud %s ", (n->pere == n) ? "/" : n->nom);
 	if(n->est_un_dossier) printf("(D), ");
 	else printf("(F), ");
-	printf("pere: %s, ", n->pere->nom);
-	printf("fils: ");
-	print_fils(n->fils);
+	if(n->pere != n) printf("pere: %s, ", (n->pere == n->racine) ? "/" : n->pere->nom);
+	size_t s = liste_size(n->fils);
+	printf("%zu fils%s", s, (s != 0 ? ": " : "\n"));
+	if(n->fils != NULL) print_fils(n->fils);
 	for(liste_noeud* f = n->fils; f != NULL; f = f->succ) {
 		print(f->no);
-		printf("\n");
 	}
 }
 

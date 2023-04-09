@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -84,4 +85,14 @@ void print_fils(liste_noeud* l) {
 		tmp = tmp->succ;
 	}
 	printf("%s %s\n", tmp->no->nom, (tmp->no->est_un_dossier ? "(D)" : "(F)"));
+}
+
+size_t liste_size(liste_noeud* l) {
+	size_t ret = 0;
+	liste_noeud* tmp = l;
+	while(tmp != NULL) {
+		tmp = tmp->succ;
+		++ret;
+	}
+	return ret;
 }

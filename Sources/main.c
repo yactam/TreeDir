@@ -47,6 +47,8 @@ int main(int argc, char** argv) {
 			free(s);
 			// free program !!
 			exit(0);
+		} else if(strcmp(cmd, "print\n") == 0) {
+			print(n);
 		} else {
 			printf("Commande '%s' inconnue!\n", cmd);
 			printf("avec ls %d\n", strcmp(cmd, "ls\n")); 
