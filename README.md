@@ -17,9 +17,9 @@ in the tree structure, will be able to create folders/files, move, copy or delet
 
 ## Compile
 
-Waiting for a Makefile for now use:
+A Makefile is provided in the project, just lunch this command in the terminal:
 ```bash
-    $ gcc -Wall -o main Sources/commands.c Sources/string_utils.c Sources/liste_utils.c Sources/main.c 
+    $ make all 
 ```
 
 ## Execute 
@@ -27,5 +27,5 @@ Waiting for a Makefile for now use:
 After compiling just run:
 
 ```bash
-    $ ./main
+    $ ./treedir
 ```

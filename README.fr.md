@@ -16,9 +16,9 @@ dans l'arborescence, pourra créer des dossiers/fichiers, déplacer, copier ou s
 
 ## Compiler
 
-Dans l'attente d'un fichier Makefile, lancer la commande:
+Un fichier Makefile est fourni dans le projet, lancer la commande:
 ```bash
-    $ gcc -Wall -o main Sources/commands.c Sources/string_utils.c Sources/liste_utils.c Sources/main.c 
+    $ make all 
 ```
 
 ## Exécuter
@@ -26,5 +26,5 @@ Dans l'attente d'un fichier Makefile, lancer la commande:
 Apres avoir compilé le projet lancer la commande:
 
 ```bash
-    $ ./main
+    $ ./treedir
 ```
