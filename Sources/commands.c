@@ -166,3 +166,22 @@ void print(noeud* n) {
 	}
 }
 
+/**********************************/
+void tree_helper(noeud* n, char* padding) {
+	if(n == NULL) return;
+	if(n->est_un_dossier) printf(BLUE BOLD "%s%s\n" NORM DEFAULT, padding,  (n->pere == n) ? "/" : n->nom);
+	else printf("%s%s\n", padding, n->nom);
+	size_t s = strlen(padding) + 3;
+	char* newPadding = malloc(s * sizeof(char));
+	for(size_t i = 0; i < s; ++i) {
+		*(newPadding+i) = ' ';
+	}
+	for(liste_noeud* f = n->fils; f != NULL; f = f->succ) {
+		tree_helper(f->no, newPadding);
+	}
+}
+
+void tree(noeud* n) {
+	tree_helper(n, "");
+}
+

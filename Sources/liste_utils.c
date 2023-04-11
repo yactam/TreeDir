@@ -6,10 +6,12 @@
 #include "../Headers/liste_utils.h"
 #include "../Headers/string_utils.h"
 
+
 void liste(liste_noeud* l) {
 	liste_noeud* tmp = l;
 	while(tmp != NULL) {
-		printf("%s\n", tmp->no->nom);
+		if(tmp->no->est_un_dossier) printf(BLUE BOLD "%s\n" NORM DEFAULT, tmp->no->nom);
+		else printf("%s\n", tmp->no->nom);
 		tmp = tmp->succ;
 	}
 }

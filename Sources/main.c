@@ -49,9 +49,12 @@ int main(int argc, char** argv) {
 			exit(0);
 		} else if(strcmp(cmd, "print\n") == 0) {
 			print(n);
+		} else if(strcmp(cmd, "tree\n") == 0) {
+			tree(n);
 		} else {
-			printf("Commande '%s' inconnue!\n", cmd);
-			printf("avec ls %d\n", strcmp(cmd, "ls\n")); 
+			ls(n);
+			//printf("Commande '%s' inconnue!\n", cmd);
+			//printf("avec ls %d\n", strcmp(cmd, "ls\n")); 
 		}
 		free(s);
 		free_parser(p);

@@ -40,5 +40,6 @@ noeud* rm(noeud*, char*);
 noeud* cp(noeud*, char*, char*);
 noeud* mv(noeud*, char*, char*);
 void print(noeud*);
+void tree(noeud*);
 
 #endif

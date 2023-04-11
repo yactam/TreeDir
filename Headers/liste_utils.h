@@ -2,6 +2,10 @@
 #define _LISTE_UTILSH_
 #include "../Headers/commands.h"
 #include <stddef.h>
+#define BOLD "\e[1m"
+#define NORM "\e[m"
+#define BLUE "\033[0;34m"
+#define DEFAULT "\033[0m"
 
 liste_noeud* create_liste(noeud*);
 void liste(liste_noeud*);
