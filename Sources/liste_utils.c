@@ -39,7 +39,17 @@ liste_noeud* add_liste(liste_noeud* l, noeud* n) {
 }
 
 liste_noeud* remove_liste(liste_noeud* l, noeud* n) { // TODO
-	return l;
+	liste_noeud *prec = NULL;
+	liste_noeud *s = l;
+	while (l){
+		if (l->no == n){ 
+			if (!prec) return l->succ;
+			prec->succ = l->succ; 
+		}
+		prec = l;
+		l = l->succ;
+	}
+	return s;
 }
 
 liste_noeud* rename_liste(liste_noeud* l, noeud* n, char name[100]) { // TODO

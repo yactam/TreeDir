@@ -133,11 +133,13 @@ void cp_aux(noeud *n, noeud *src, char *dst){
 		printf("Erreur %s est un sous arbre du repertoire %s\n", dst, src->nom);
 		return;
 	}
-	if (find_liste(dst_noeud->fils, dst)){
+	if (find_liste(dst_noeud->fils, lastW)){
 		printf("Erreur le nom %s exsiste deja\n");
 		return;
 	}
-	if (src->pere) src->pere->fils = NULL;
+	if (src->pere) 
+		src->pere->fils = remove_liste(src->pere->fils, src);
+	strcpy(src->nom, lastW);
 	dst_noeud->fils = add_liste(dst_noeud->fils, src);
 }
 
