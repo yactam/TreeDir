@@ -38,7 +38,7 @@ void pwd(noeud* n) {
 	pwd_helper(n, n);
 }
 /**********************************/
-noeud* cd(noeud* n, char* chem) {
+noeud* cd(noeud* n, char* chem, int *erreur) {
 	assert(chem != NULL && n != NULL);
 	parser* p = init(chem, '/');
 	noeud* ret = n;
@@ -47,6 +47,7 @@ noeud* cd(noeud* n, char* chem) {
 		char* s = next(p);
 		if(estvide(s)) {
 			printf("Erreure dans le chemin %s!\n", s);
+			if (erreur) *erreur = ERREUR_CHEMIN_INVALIDE;
 			return n;
 		} else if(strcmp(s, ".") == 0) {
 			ret = ret;
@@ -56,9 +57,11 @@ noeud* cd(noeud* n, char* chem) {
 			noeud* vers = find_liste(ret->fils, s);
 			if(vers == NULL) {
 				printf("Le chemin n'existe pas!\n");
+				if (erreur) *erreur = ERREUR_CHEMIN_INEXSISTANT;
 				return n;
 			} else if(!vers->est_un_dossier) {
-				printf("Le chemin est incorrect %s n'est pas un dossier!\n", vers->nom);	
+				printf("Le chemin est incorrect %s n'est pas un dossier!\n", vers->nom);
+				if (erreur) *erreur = ERREUR_CONTIENT_FICHIER;	
 			} else {
 				ret = vers;
 			}
@@ -106,6 +109,45 @@ noeud* touch(noeud* n, char* nom) {
 	return add_noeud(n, nom, false);
 }
 
-/**********************************/
+/************** cp ********************/
+bool est_inclut(noeud *n1, noeud *n2){
+	while (n2){
+		if (n2 == n1) return true;
+		n2 = n2->pere;
+	}
+	return false;
+}
 
+void cp_aux(noeud *n, noeud *src, char *dst){
+	char *lastW = last(dst, '/');
+	char *pahtTruncated = malloc(strlen(dst) - strlen(lastW));
+	strncpy(pahtTruncated, dst, strlen(dst) - strlen(lastW));
+	int erreur = 0;
+	noeud *dst_noeud = cd(n, pahtTruncated, &erreur);
+	if (hasEror(erreur)) return;
+	if (!dst_noeud->est_un_dossier){
+		print("Erreur le chemin de destination n'est pas un dossier\n");
+		return;
+	}
+	if (est_inclut(src, dst_noeud)){
+		printf("Erreur %s est un sous arbre du repertoire %s\n", dst, src->nom);
+		return;
+	}
+	if (find_liste(dst_noeud->fils, dst)){
+		printf("Erreur le nom %s exsiste deja\n");
+		return;
+	}
+	if (src->pere) src->pere->fils = NULL;
+	dst_noeud->fils = add_liste(dst_noeud->fils, src);
+}
+
+noeud* cp(noeud* n, char* src, char* dst){
+	int erreur = 0;
+	assert(erreur);
+	noeud *src_noeud = cd(n, src, &erreur);
+	if (!hasEror(erreur))
+		cp_aux(n, src_noeud, dst);
+	free(erreur);
+	return n;
+}
 /**********************************/

@@ -59,3 +59,15 @@ bool isalphanum(char* s) {
 bool estvide(char* s) {
 	return strcmp(s, "") == 0;
 }
+
+char *last(char *s, char d){
+	int len = strlen(s);
+	int index;
+	char *end = s+len-1;
+	while (*end != d){
+		end--;
+	}
+	char *res = malloc(strlen(end));
+	strcpy(res, end+1);
+	return res;
+}

@@ -17,4 +17,4 @@ char* next(parser*);
 bool hasNext(parser*);
 bool isalphanum(char*);
 bool estvide(char*);
-
+char *last(char *, char);

@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 				assert(memcpy(arg, aux, (strlen(aux)-1) * sizeof(char)) != NULL);
 				printf("'%s'\n", arg);
 				if(strcmp(arg, "..") == 0) n = cd_parent(n);
-				else n = cd(n, arg);
+				else n = cd(n, arg, NULL);
 			}
 		} else if (strcmp(cmd, "ls\n") == 0 || strcmp(cmd, "ls") == 0) {
 			ls(n);
