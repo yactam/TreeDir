@@ -26,5 +26,5 @@ Un fichier Makefile est fourni dans le projet, lancer la commande:
 Apres avoir compilé le projet lancer la commande:
 
 ```bash
-    $ ./treedir
+    $ ./treedir Tests/fic.txt
 ```

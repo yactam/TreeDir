@@ -1,64 +1,62 @@
+#include <stddef.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include "../Headers/commands.h"
 #include "../Headers/string_utils.h"
-#define N 1000
+#include "../Headers/file_utils.h"
 
 int main(int argc, char** argv) {
-	printf("Simulation mini linux\n");
-	noeud* n = init_program();
-	while(true) {
-		char* s = malloc(N * sizeof(char));
-		printf("> ");
-		fgets(s, N, stdin);
-		parser* p = init(s, ' ');
-		char* cmd = next(p);
-		if(strcmp(cmd, "pwd\n") == 0) {
-			pwd(n);
-		} else if (strcmp(cmd, "cd") == 0 || strcmp(cmd, "cd\n") == 0) {
-			if(!hasNext(p)) n = cd_racine(n);
-			else {
+	if(argc != 2) {
+		printf("Ce programme attends qu'un seul fichiers en parametre, vous avez fourni %d arguments\n", argc-1);
+		exit(EXIT_FAILURE);
+	} else {
+		char* path = argv[1];
+		assert(path != NULL);
+		FILE* fic = file_reader(path);
+		size_t s = nbCommands(fic);
+		char** cmds = getCommands(fic);
+		noeud* n = init_program();
+		for(size_t i = 0; i < s; ++i) {
+			char* ligne = cmds[i];
+			printf(">%s\n", ligne);
+			parser* p = init(ligne, ' ');
+			char* cmd = next(p);
+			if(strcmp(cmd, "pwd") == 0) {
+				pwd(n);
+			} else if (strcmp(cmd, "cd") == 0) {
+				if(!hasNext(p)) {
+					n = cd_racine(n);
+				}
+				else {
+					char* aux = next(p);
+					if(strcmp(aux, "..") == 0) n = cd_parent(n);
+					else n = cd(n, aux);
+				}
+			} else if (strcmp(cmd, "ls") == 0) {
+				ls(n);
+			} else if (strcmp(cmd, "mkdir") == 0) {
 				char* aux = next(p);
-				char* arg = malloc(strlen(aux) * sizeof(char));
-				assert(arg != NULL);
-				assert(memcpy(arg, aux, (strlen(aux)-1) * sizeof(char)) != NULL);
-				printf("'%s'\n", arg);
-				if(strcmp(arg, "..") == 0) n = cd_parent(n);
-				else n = cd(n, arg, NULL);
+				n = mkdir(n, aux);
+			} else if(strcmp(cmd, "touch") == 0) {
+				char* aux = next(p);
+				n = touch(n, aux);
+			} else if(strcmp(cmd, "exit") == 0) {
+				free_parser(p);
+				// free program !!
+				exit(0);
+			} else if(strcmp(cmd, "print") == 0) {
+				print(n);
+			} else if(strcmp(cmd, "tree") == 0) {
+				tree(n);
+			} else {
+				printf("Commande '%s' inconnue!\n", cmd); 
 			}
-		} else if (strcmp(cmd, "ls\n") == 0 || strcmp(cmd, "ls") == 0) {
-			ls(n);
-		} else if (strcmp(cmd, "mkdir") == 0) {
-			char* aux = next(p);
-			char* arg = malloc(strlen(aux) * sizeof(char));
-			assert(arg != NULL);
-			assert(memcpy(arg, aux, (strlen(aux)-1) * sizeof(char)) != NULL);
-			n = mkdir(n, arg);
-		} else if(strcmp(cmd, "touch") == 0) {
-			char* aux = next(p);
-			char* arg = malloc(strlen(aux) * sizeof(char));
-			assert(arg != NULL);
-			assert(memcpy(arg, aux, (strlen(aux)-1) * sizeof(char)) != NULL);
-			n = touch(n, arg);
-		} else if(strcmp(cmd, "exit\n") == 0) {
 			free_parser(p);
-			free(s);
-			// free program !!
-			exit(0);
-		} else if(strcmp(cmd, "print\n") == 0) {
-			print(n);
-		} else if(strcmp(cmd, "tree\n") == 0) {
-			tree(n);
-		} else {
-			ls(n);
-			//printf("Commande '%s' inconnue!\n", cmd);
-			//printf("avec ls %d\n", strcmp(cmd, "ls\n")); 
 		}
-		free(s);
-		free_parser(p);
-		// free program (rm /)
+		close_file(fic);
+		free(cmds);
 	}
-    return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }

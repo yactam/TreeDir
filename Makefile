@@ -1,10 +1,13 @@
 all : treedir
 
-treedir : ./Sources/main.o ./Sources/commands.o ./Sources/liste_utils.o ./Sources/string_utils.o
-	gcc -o treedir ./Sources/main.o ./Sources/commands.o ./Sources/liste_utils.o ./Sources/string_utils.o 
+treedir : ./Sources/main.o ./Sources/commands.o ./Sources/liste_utils.o ./Sources/string_utils.o ./Sources/file_utils.o
+	gcc -o treedir ./Sources/main.o ./Sources/commands.o ./Sources/liste_utils.o ./Sources/string_utils.o ./Sources/file_utils.o
 
 ./Sources/main.o : ./Sources/main.c
 	gcc -Wall -o ./Sources/main.o -c ./Sources/main.c
+
+./Sources/file_utils.o : ./Sources/file_utils.c
+	gcc -Wall -o ./Sources/file_utils.o -c ./Sources/file_utils.c
 
 ./Sources/commands.o : ./Sources/commands.c
 	gcc -Wall -o ./Sources/commands.o -c ./Sources/commands.c 

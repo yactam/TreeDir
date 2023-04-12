@@ -38,7 +38,7 @@ void pwd(noeud* n) {
 	pwd_helper(n, n);
 }
 /**********************************/
-noeud* cd(noeud* n, char* chem, int *erreur) {
+noeud* cd(noeud* n, char* chem) {
 	assert(chem != NULL && n != NULL);
 	parser* p = init(chem, '/');
 	noeud* ret = n;
@@ -47,7 +47,6 @@ noeud* cd(noeud* n, char* chem, int *erreur) {
 		char* s = next(p);
 		if(estvide(s)) {
 			printf("Erreure dans le chemin %s!\n", s);
-			if (erreur) *erreur = ERREUR_CHEMIN_INVALIDE;
 			return n;
 		} else if(strcmp(s, ".") == 0) {
 			ret = ret;
@@ -57,11 +56,9 @@ noeud* cd(noeud* n, char* chem, int *erreur) {
 			noeud* vers = find_liste(ret->fils, s);
 			if(vers == NULL) {
 				printf("Le chemin n'existe pas!\n");
-				if (erreur) *erreur = ERREUR_CHEMIN_INEXSISTANT;
 				return n;
 			} else if(!vers->est_un_dossier) {
 				printf("Le chemin est incorrect %s n'est pas un dossier!\n", vers->nom);
-				if (erreur) *erreur = ERREUR_CONTIENT_FICHIER;	
 			} else {
 				ret = vers;
 			}
@@ -123,8 +120,7 @@ void cp_aux(noeud *n, noeud *src, char *dst){
 	char *pahtTruncated = malloc(strlen(dst) - strlen(lastW));
 	strncpy(pahtTruncated, dst, strlen(dst) - strlen(lastW));
 	int erreur = 0;
-	noeud *dst_noeud = cd(n, pahtTruncated, &erreur);
-	if (hasEror(erreur)) return;
+	noeud *dst_noeud = cd(n, pahtTruncated);
 	if (!dst_noeud->est_un_dossier){
 		print("Erreur le chemin de destination n'est pas un dossier\n");
 		return;
@@ -144,12 +140,8 @@ void cp_aux(noeud *n, noeud *src, char *dst){
 }
 
 noeud* cp(noeud* n, char* src, char* dst){
-	int erreur = 0;
-	assert(erreur);
-	noeud *src_noeud = cd(n, src, &erreur);
-	if (!hasEror(erreur))
-		cp_aux(n, src_noeud, dst);
-	free(erreur);
+	noeud *src_noeud = cd(n, src);
+	cp_aux(n, src_noeud, dst);
 	return n;
 }
 /**********************************/

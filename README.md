@@ -27,5 +27,5 @@ A Makefile is provided in the project, just lunch this command in the terminal:
 After compiling just run:
 
 ```bash
-    $ ./treedir
+    $ ./treedir Tests/file.txt
 ```

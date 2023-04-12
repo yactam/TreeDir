@@ -2,8 +2,11 @@
 #define _LISTE_UTILSH_
 
 #include <stddef.h>
+#include <stdio.h>
 
-size_t nbCommands(char*);
-char** getCommands(char*);
+FILE* file_reader(char*);
+size_t nbCommands(FILE*);
+char** getCommands(FILE*);
+void close_file(FILE*);
 
 #endif
