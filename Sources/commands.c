@@ -7,6 +7,7 @@
 #include "../Headers/string_utils.h"
 #include "../Headers/liste_utils.h"
 #include "../Headers/commands.h"
+#define DEBUG 0
 
 noeud* init_program() {
 	noeud* root = malloc(sizeof(noeud*));
@@ -39,7 +40,7 @@ void pwd(noeud* n) {
 }
 /**********************************/
 noeud* cd(noeud* n, char* chem) {
-	assert(chem != NULL && n != NULL);
+	assert(chem != NULL && n != NULL && strcmp(chem, "/") != 0);
 	parser* p = init(chem, '/');
 	noeud* ret = n;
 	if(*chem == '/') ret = n->racine;
@@ -106,31 +107,61 @@ noeud* touch(noeud* n, char* nom) {
 	return add_noeud(n, nom, false);
 }
 
-/************** cp ********************/
-bool est_inclut(noeud *n1, noeud *n2){
-	while (n2){
-		if (n2 == n1) return true;
-		n2 = n2->pere;
+/*********************************/
+noeud* rm(noeud* n, char* chem) {
+	assert(chem != NULL);
+	char* target = last(chem, '/');
+	if(DEBUG) printf("target: %s\n", target);
+	size_t s = strlen(chem) - strlen(target); 
+	if(DEBUG) printf("longuer du chemin(path): %zu\n", s);
+	char* path = malloc(s * sizeof(char));
+	assert(path != NULL);
+	if(s > 0) assert(strncpy(path, chem, s) != NULL);
+	*(path+s) = '\0';
+	if(DEBUG) printf("path: %s\n", path);
+	noeud* tmp = n;
+	if(!estvide(path)) {
+		if(strcmp(path, "/") == 0) tmp = cd_racine(tmp); 
+		else tmp = cd(tmp, path);
+		assert(tmp != NULL);
 	}
-	return false;
+	noeud* to_rm = find_liste(tmp->fils, target);
+	if(DEBUG) {
+		printf("à supprimer: %s, noeud courant: ", to_rm->nom);
+		pwd(n);
+		printf("est_parent: %d\n", est_parent(to_rm, n));
+	}
+	if(!estvide(path) && est_parent(to_rm, n)) {
+		perror("Erreure rm le noeud corrant est inclut dans le sous arbre que vous voulez supprimer");
+		exit(EXIT_FAILURE);
+	}
+	for(liste_noeud* l = to_rm->fils; l != NULL; l = l->succ) {
+		rm(to_rm, l->no->nom);
+	}
+	assert(to_rm->fils == NULL);
+	tmp->fils = remove_liste(tmp->fils, to_rm);
+	assert(tmp->fils == NULL || find_liste(tmp->fils, to_rm->nom) == NULL);
+	free(to_rm);
+	tmp = n;
+	return tmp;
 }
 
+/************** cp ********************/
 void cp_aux(noeud *n, noeud *src, char *dst){
 	char *lastW = last(dst, '/');
 	char *pahtTruncated = malloc(strlen(dst) - strlen(lastW));
 	strncpy(pahtTruncated, dst, strlen(dst) - strlen(lastW));
-	int erreur = 0;
 	noeud *dst_noeud = cd(n, pahtTruncated);
 	if (!dst_noeud->est_un_dossier){
-		print("Erreur le chemin de destination n'est pas un dossier\n");
+		perror("Erreur le chemin de destination n'est pas un dossier\n");
 		return;
 	}
-	if (est_inclut(src, dst_noeud)){
+	if (est_parent(src, dst_noeud)){
 		printf("Erreur %s est un sous arbre du repertoire %s\n", dst, src->nom);
 		return;
 	}
 	if (find_liste(dst_noeud->fils, lastW)){
-		printf("Erreur le nom %s exsiste deja\n");
+		printf("Erreur le nom %s exsiste deja\n", dst_noeud->fils->no->nom);
 		return;
 	}
 	if (src->pere) 

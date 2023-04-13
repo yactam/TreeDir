@@ -3,9 +3,11 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include "../Headers/commands.h"
 #include "../Headers/string_utils.h"
 #include "../Headers/file_utils.h"
+#define SLEEP_TIME 1000000
 
 int main(int argc, char** argv) {
 	if(argc != 2) {
@@ -42,10 +44,13 @@ int main(int argc, char** argv) {
 			} else if(strcmp(cmd, "touch") == 0) {
 				char* aux = next(p);
 				n = touch(n, aux);
-			} else if(strcmp(cmd, "exit") == 0) {
-				free_parser(p);
-				// free program !!
-				exit(0);
+			} else if(strcmp(cmd, "cp") == 0) {
+				char* src = next(p);
+				char* dst = next(p);
+				n = cp(n, src, dst);
+			} else if(strcmp(cmd, "rm") == 0) {
+				char* aux = next(p);
+				n = rm(n, aux);
 			} else if(strcmp(cmd, "print") == 0) {
 				print(n);
 			} else if(strcmp(cmd, "tree") == 0) {
@@ -54,6 +59,7 @@ int main(int argc, char** argv) {
 				printf("Commande '%s' inconnue!\n", cmd); 
 			}
 			free_parser(p);
+			usleep(SLEEP_TIME);
 		}
 		close_file(fic);
 		free(cmds);

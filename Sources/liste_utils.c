@@ -69,6 +69,16 @@ noeud* find_liste(liste_noeud* l, char* nom) {
 	return NULL;
 }
 
+bool est_parent(noeud * n, noeud * m) { // Teste si m est un sous noeud de n
+	noeud* tmp = m;
+	if(n == m) return true;
+	while(tmp->pere != tmp && tmp->pere != n) {
+		tmp = tmp->pere;
+	}
+	if(tmp->pere == n) return true;
+	return false;
+}
+
 void free_liste(liste_noeud* l) {
 	liste_noeud* tmp = l;
 	while(tmp != NULL) {

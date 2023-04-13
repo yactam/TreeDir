@@ -64,12 +64,12 @@ bool estvide(char* s) {
 
 char *last(char *s, char d){
 	int len = strlen(s);
-	int index;
 	char *end = s+len-1;
-	while (*end != d){
+	while (end != s && *(end-1) != d){
 		end--;
 	}
-	char *res = malloc(strlen(end));
-	strcpy(res, end+1);
+	char *res = malloc((strlen(end)+1) * sizeof(char));
+	strcpy(res, end);
+	*(res+strlen(res)) = '\0';
 	return res;
 }

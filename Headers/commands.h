@@ -15,7 +15,7 @@ struct noeud {
 
 struct liste_noeud {
     struct noeud* no; // noeud actuel 
-    struct liste_noeud* succ; // son successeur
+    struct liste_noeud* succ; // ses successeur
 };
 
 typedef struct noeud noeud;
