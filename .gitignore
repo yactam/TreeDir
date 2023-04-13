@@ -1,0 +1,4 @@
+.vscode
+./Sources/*.o
+*.o
+treedir
