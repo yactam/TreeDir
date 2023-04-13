@@ -8,6 +8,7 @@
 #include "../Headers/file_utils.h"
 
 int main(int argc, char** argv) {
+	int debug = 0;
 	if(argc != 2) {
 		printf("Ce programme attends qu'un seul fichiers en parametre, vous avez fourni %d arguments\n", argc-1);
 		exit(EXIT_FAILURE);
