@@ -1,0 +1,35 @@
+mkdir S4
+cd S4
+mkdir C
+mkdir EA
+mkdir OL
+mkdir OP
+mkdir MI
+mkdir EU
+cd C
+mkdir Cours
+mkdir TDs
+mkdir Projet
+cd TDs
+mkdir Programmes
+touch td1
+touch td2
+touch td3
+cd Programmes
+touch p1
+touch p2
+touch p3
+tree
+pwd
+rm /S4/EA
+tree
+cd /S4/C
+tree
+rm Cours
+tree
+cd ../..
+rm /S4
+tree
+pwd
+ls
+print
