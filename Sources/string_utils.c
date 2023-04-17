@@ -41,7 +41,7 @@ char* next(parser* p) {
 		assert(ret != NULL);
 		assert(memcpy(ret, p->buffer+p->next, l * sizeof(char)) != NULL);
 		*(ret+l) = '\0'; 
-		free(p->tmp);
+		//free(p->tmp); // Ça pose des probléme à cause de p->tmp = ret (adresse partagé) donc si on fait deux fois next le premier sera perdu
 		p->tmp = ret;
 	} else {
 		ret = "\0"; // Pour signaler une erreure dans le chemin par ex: /Cours////ProjetC (plusieurs <</>> consecutifs)
