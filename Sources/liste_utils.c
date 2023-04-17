@@ -25,7 +25,7 @@ liste_noeud* create_liste(noeud* n) {
 }
 
 liste_noeud* add_liste(liste_noeud* l, noeud* n) {
-	assert(l != NULL);
+	if(l == NULL) return create_liste(n);
 	liste_noeud* tmp = l;
 	while(tmp->succ != NULL) {
 		if(strcmp(tmp->no->nom, n->nom) == 0) { // Si le nom existe déja dans la liste on va pas encore l'ajouter une autre fois
@@ -60,6 +60,7 @@ liste_noeud* rename_liste(liste_noeud* l, noeud* n, char name[100]) { // TODO
 }
 
 noeud* find_liste(liste_noeud* l, char* nom) {
+	if(l == NULL) return NULL;
 	assert(l != NULL && nom != NULL);
 	liste_noeud* tmp = l;
 	while(tmp != NULL) {
@@ -67,6 +68,14 @@ noeud* find_liste(liste_noeud* l, char* nom) {
 		tmp = tmp->succ;
 	}
 	return NULL;
+}
+
+liste_noeud* copie_liste(liste_noeud* l) {
+	if(l == NULL) return NULL;
+
+	liste_noeud* h = create_liste(l->no);
+	h->succ = copie_liste(l->succ);
+	return h;
 }
 
 bool est_parent(noeud * n, noeud * m) { // Teste si m est un sous noeud de n
