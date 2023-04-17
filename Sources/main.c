@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 			} else if(strcmp(cmd, "cp") == 0) {
 				char* src = next(p);
 				char* dst = next(p);
-				n = cp(n, src, dst);
+				n = cp(n, "/Cours", dst);
 			} else if(strcmp(cmd, "rm") == 0) {
 				char* aux = next(p);
 				n = rm(n, aux);

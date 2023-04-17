@@ -38,6 +38,7 @@ void pwd_helper(noeud* n, noeud* end) {
 void pwd(noeud* n) {
 	pwd_helper(n, n);
 }
+
 /**********************************/
 noeud* cd(noeud* n, char* chem) {
 	assert(chem != NULL && n != NULL && strcmp(chem, "/") != 0);
@@ -147,34 +148,76 @@ noeud* rm(noeud* n, char* chem) {
 }
 
 /************** cp ********************/
-void cp_aux(noeud *n, noeud *src, char *dst){
-	char *lastW = last(dst, '/');
-	char *pahtTruncated = malloc(strlen(dst) - strlen(lastW));
-	strncpy(pahtTruncated, dst, strlen(dst) - strlen(lastW));
-	noeud *dst_noeud = cd(n, pahtTruncated);
-	if (!dst_noeud->est_un_dossier){
-		perror("Erreur le chemin de destination n'est pas un dossier\n");
-		return;
+noeud* cp(noeud* n, char* chem1, char* chem2) {
+	char* from = last(chem1, '/');
+	size_t s = strlen(chem1) - strlen(from);
+	char* src = malloc((s+1) * sizeof(char));
+	assert(src != NULL);
+	if(s > 0) assert(strncpy(src, chem1, s) != NULL);
+	*(src+s) = '\0';
+	noeud* tmp = n;
+	if(!estvide(src)) {
+		if(strcmp(src, "/") == 0) tmp = cd_racine(tmp);
+		else tmp = cd(tmp, src);
+		assert(tmp != NULL);
 	}
-	if (est_parent(src, dst_noeud)){
-		printf("Erreur %s est un sous arbre du repertoire %s\n", dst, src->nom);
-		return;
-	}
-	if (find_liste(dst_noeud->fils, lastW)){
-		printf("Erreur le nom %s exsiste deja\n", dst_noeud->fils->no->nom);
-		return;
-	}
-	if (src->pere) 
-		src->pere->fils = remove_liste(src->pere->fils, src);
-	strcpy(src->nom, lastW);
-	dst_noeud->fils = add_liste(dst_noeud->fils, src);
-}
+	noeud* to_cp = find_liste(tmp->fils, from);
 
-noeud* cp(noeud* n, char* src, char* dst){
-	noeud *src_noeud = cd(n, src);
-	cp_aux(n, src_noeud, dst);
+	// Move to the destination
+	char* to = last(chem2, '/');
+	size_t t = strlen(chem2) - strlen(to);
+	char* dst = malloc((t+1) * sizeof(char));
+	assert(dst != NULL);
+	if(t > 0) assert(strncpy(dst, chem2, t) != NULL);
+	*(dst+t) = '\0';
+	noeud* aux = n;
+	if(!estvide(dst)) {
+		if(strcmp(dst, "/") == 0) aux = cd_racine(aux);
+		else aux = cd(aux, dst);
+		assert(aux != NULL);
+	}
+	
+	if(!aux->est_un_dossier) {
+		perror("Erreure cp: la destination n'est pas un dossier");
+		exit(EXIT_FAILURE);
+	}
+	if(find_liste(aux->fils, to) != NULL) {
+		perror("Erreure cp: il y a un noeud avec le meme nom dans destionation");
+		exit(EXIT_FAILURE);
+	}
+	if(est_parent(to_cp, aux)) {
+		perror("Erreure cp: le noeud que vous voulez copier est inclut dans la destination (copie recursive sans fin)");
+		exit(EXIT_FAILURE);
+	}
+
+	noeud* cp_noeud = malloc(sizeof(noeud));
+	cp_noeud->est_un_dossier = to_cp->est_un_dossier;
+	assert(memcpy(cp_noeud->nom, to, (strlen(to) + 1) * sizeof(char)) != NULL);
+	cp_noeud->racine = to_cp->racine;
+	cp_noeud->pere = aux;
+	aux->fils = add_liste(aux->fils, cp_noeud);
+	for(liste_noeud* l = to_cp->fils; l != NULL; l = l->succ) {
+		size_t s1 = strlen(chem1), sn = strlen(l->no->nom);
+		char* c1 = malloc((s1 + sn + 2) * sizeof(char));
+		assert(memcpy(c1, chem1, s1 * sizeof(char)) != NULL);
+		*(c1+s1) = '/';
+		*(c1+s1+1) = '\0';
+		assert(strcat(c1, l->no->nom) != NULL);
+		*(c1 + s1 + sn + 1) = '\0';
+		
+		size_t s2 = strlen(chem2);
+		char* c2 = malloc((s2 + sn + 2) * sizeof(char));
+		assert(memcpy(c2, chem2, s2 * sizeof(char)) != NULL);
+		*(c2+s2) = '/';
+		*(c2+s2+1) = '\0';
+		assert(strcat(c2, l->no->nom) != NULL);
+		*(c2 + s2 + sn + 1) = '\0';
+		cp(cp_noeud, c1, c2);
+	}
+	//cp_noeud->fils = copie_liste(to_cp->fils);
 	return n;
 }
+
 /**********************************/
 void print(noeud* n) {
 	printf("Noeud %s ", (n->pere == n) ? "/" : n->nom);
