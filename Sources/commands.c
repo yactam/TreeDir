@@ -212,9 +212,15 @@ noeud* cp(noeud* n, char* chem1, char* chem2) {
 		*(c2+s2+1) = '\0';
 		assert(strcat(c2, l->no->nom) != NULL);
 		*(c2 + s2 + sn + 1) = '\0';
-		cp(cp_noeud, c1, c2);
+		n = cp(n, c1, c2);
 	}
-	//cp_noeud->fils = copie_liste(to_cp->fils);
+	return n;
+}
+
+/**********************************/
+noeud* mv(noeud* n, char* chem1, char* chem2) {
+	n = cp(n, chem1, chem2);
+	n = rm(n, chem1);
 	return n;
 }
 

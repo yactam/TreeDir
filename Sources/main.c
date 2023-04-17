@@ -47,8 +47,12 @@ int main(int argc, char** argv) {
 			} else if(strcmp(cmd, "cp") == 0) {
 				char* src = next(p);
 				char* dst = next(p);
-				n = cp(n, "/Cours", dst);
-			} else if(strcmp(cmd, "rm") == 0) {
+				n = cp(n, src, dst);
+			} else if(strcmp(cmd, "mv") == 0) {
+				char* src = next(p);
+				char* dst = next(p);
+				n = mv(n, src, dst);
+			}else if(strcmp(cmd, "rm") == 0) {
 				char* aux = next(p);
 				n = rm(n, aux);
 			} else if(strcmp(cmd, "print") == 0) {
