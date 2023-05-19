@@ -5,26 +5,26 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "../Headers/string_utils.h"
+#include "../Headers/debug.h"
 
 parser* init(char* string, char delimiter) {
 	parser* p = malloc(sizeof(parser));
-	assert(p != NULL);
+	check_mem(p);
 	size_t len = strlen(string);
 	p->buffer = malloc((len+1) * sizeof(char));
-	assert(p->buffer != NULL);
-	assert(memcpy(p->buffer, string, len * sizeof(char)) != NULL);
+	check_mem(p->buffer);
+	check_mem(memcpy(p->buffer, string, len * sizeof(char)));
 	*(p->buffer+len) = '\0';
 	p->delimiter = delimiter;
 	p->next = 0;
 	if(*string == delimiter) p->next += 1;
-	p->tmp = malloc(sizeof(char));
-	assert(p->tmp != NULL);
 	return p;
+error:
+	return NULL;
 }
 
 void free_parser(parser* p) {
 	free(p->buffer);
-	free(p->tmp);
 	free(p);
 }
 
@@ -33,22 +33,26 @@ bool hasNext(parser* p) {
 }
 
 char* next(parser* p) {
-	assert(p->next != -1);
+	check(p->next != -1, "parser has no next.");
 	size_t l = 0;
-	for(size_t i = p->next; i < strlen(p->buffer) && *(p->buffer+i) != p->delimiter; ++i) ++l;
+	for(size_t i = p->next; i < strlen(p->buffer) && *(p->buffer+i) != p->delimiter; ++i) ++l; // La longueur de la chaine entre deux dilimiteur 
 	char* ret = malloc((l+1) * sizeof(char));
+	check_mem(ret != NULL);
 	if(l != 0) {
-		assert(ret != NULL);
-		assert(memcpy(ret, p->buffer+p->next, l * sizeof(char)) != NULL);
-		*(ret+l) = '\0'; 
-		//free(p->tmp); // Ça pose des probléme à cause de p->tmp = ret (adresse partagé) donc si on fait deux fois next le premier sera perdu
-		p->tmp = ret;
+		check_mem(memcpy(ret, p->buffer+p->next, l * sizeof(char)));
+		*(ret+l) = '\0';
 	} else {
-		ret = "\0"; // Pour signaler une erreure dans le chemin par ex: /Cours////ProjetC (plusieurs <</>> consecutifs)
+		*ret = '\0'; // Pour signaler une erreure dans le chemin par ex: /Cours////ProjetC (plusieurs <</>> consecutifs)
 	}
 	p->next += l+1;
 	if(p->next >= strlen(p->buffer)) p->next = -1;
 	return ret;
+error:
+	return NULL;
+}
+
+void free_word(char* w) {
+	if(w != NULL) free(w);
 }
 
 bool isalphanum(char* s) {
@@ -62,14 +66,19 @@ bool estvide(char* s) {
 	return strcmp(s, "") == 0;
 }
 
-char *last(char *s, char d){
+char* last(char *s, char d){
+	assert(s != NULL);
 	int len = strlen(s);
 	char *end = s+len-1;
 	while (end != s && *(end-1) != d){
 		end--;
 	}
-	char *res = malloc((strlen(end)+1) * sizeof(char));
-	strcpy(res, end);
-	*(res+strlen(res)) = '\0';
+	size_t n = strlen(end);
+	char *res = malloc((n+1) * sizeof(char));
+	check_mem(res);
+	check_mem(strcpy(res, end));
+	*(res+n) = '\0';
 	return res;
+error:
+	return NULL;
 }

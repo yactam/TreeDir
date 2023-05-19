@@ -5,7 +5,7 @@
 #include <wchar.h>
 #include "../Headers/liste_utils.h"
 #include "../Headers/string_utils.h"
-
+#include "../Headers/debug.h"
 
 void liste(liste_noeud* l) {
 	liste_noeud* tmp = l;
@@ -17,42 +17,57 @@ void liste(liste_noeud* l) {
 }
 
 liste_noeud* create_liste(noeud* n) {
-	liste_noeud* l = malloc(sizeof(liste_noeud*));
-	assert(l != NULL);
+	debug("create new liste for node %s to start a new list of children for %s", n->nom, n->pere->nom);
+	liste_noeud* l = malloc(sizeof(liste_noeud));
+	check_mem(l);
 	l->no = n;
 	l->succ = NULL;
 	return l;
+error:
+	log_error("failed to allocate memory to create liste with node %s", n->nom);
+	return NULL;
 }
 
 liste_noeud* add_liste(liste_noeud* l, noeud* n) {
-	if(l == NULL) return create_liste(n);
+	debug("try to add node %s to %s children", (n != NULL ? n->nom : NULL), (n != NULL ? n->pere->nom : NULL)); 
+	if(l == NULL) {
+		l = create_liste(n);
+		return l;
+	}
 	liste_noeud* tmp = l;
 	while(tmp->succ != NULL) {
-		if(strcmp(tmp->no->nom, n->nom) == 0) { // Si le nom existe déja dans la liste on va pas encore l'ajouter une autre fois
-			printf("Le nom %s existe déja!\n", n->nom);
-			return l; // Peut-etre on peut meme faire exit 1 içi directement
-		}
+		check(strcmp(tmp->no->nom, n->nom) != 0,\
+				"the node with name %s already exists in the list of children of %s.", n->nom, n->pere->nom)
 		tmp = tmp->succ;
 	}
-	tmp->succ = malloc(sizeof(liste_noeud*));
-	assert(tmp->succ != NULL);
+	tmp->succ = malloc(sizeof(liste_noeud));
+	check_mem(tmp->succ);
 	tmp->succ->no = n;
 	tmp->succ->succ = NULL;
 	return l;
+error:
+	if(n) free_program(n->racine);
+	exit(1);
 }
 
-liste_noeud* remove_liste(liste_noeud* l, noeud* n) { // TODO
-	liste_noeud *prec = NULL;
-	liste_noeud *s = l;
-	while (l){
-		if (l->no == n){ 
-			if (!prec) return l->succ;
-			prec->succ = l->succ; 
+liste_noeud* remove_liste(liste_noeud* l, noeud* n) { 
+	if(l != NULL && n != NULL) {
+		liste_noeud* s = l;
+		if(l->no == n) {
+			l = l->succ;
+			free(s);
+			return l;
 		}
-		prec = l;
-		l = l->succ;
+		liste_noeud* prev = NULL;
+		while (s && s->no != n) {
+			prev = s;
+			s = s->succ;
+		}
+		if(s == NULL) return l;
+		prev->succ = prev->succ->succ;
+		free(s);
 	}
-	return s;
+	return l;
 }
 
 liste_noeud* rename_liste(liste_noeud* l, noeud* n, char name[100]) { // TODO
