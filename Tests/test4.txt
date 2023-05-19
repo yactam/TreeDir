@@ -1,0 +1,21 @@
+mkdir Cours
+mkdir Jeux
+cd Cours
+mkdir C
+mkdir Java
+mkdir OCaml
+cd C
+touch cours1
+touch cours2
+cd ../Java
+touch cours20
+cd ../OCaml
+mkdir TP
+cd TP
+touch mandelbrot
+touch sierpinski
+touch church
+cd
+tree
+mv /Cours/OCaml /Jeux/Play
+tree

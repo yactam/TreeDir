@@ -1,0 +1,17 @@
+ls
+pwd
+mkdir ProjetC
+touch edt
+tree
+cd ProjetC
+mkdir Cours
+mkdir Anglais
+mkdir Td
+tree
+cd Td
+touch td1
+touch td2
+cp /ProjetC/Cours CopieProjet
+cd
+print
+tree

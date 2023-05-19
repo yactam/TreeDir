@@ -17,15 +17,15 @@ in the tree structure, will be able to create folders/files, move, copy or delet
 
 ## Compile
 
-Waiting for a Makefile for now use:
-```
-    $ gcc -Wall -o main Headers/commands Sources/main.c 
+A Makefile is provided in the project, just lunch this command in the terminal:
+```bash
+    $ make all 
 ```
 
 ## Execute 
 
 After compiling just run:
 
-```
-    $ ./main
+```bash
+    $ ./treedir Tests/file.txt
 ```

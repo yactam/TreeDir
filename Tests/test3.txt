@@ -1,0 +1,27 @@
+mkdir Cours
+mkdir Td
+touch edt
+cd Cours
+mkdir ProjetC
+mkdir Anglais
+cd Anglais
+mkdir Cours
+mkdir TP
+cd Cours
+touch cour1
+touch cour2
+cd ../TP
+touch tp1
+touch tp2
+cd ../..
+cd ../Td
+touch td1
+touch td2
+cd 
+tree
+cp Cours /Td/CoursBis
+tree
+cd /Td/CoursBis/Anglais
+rm TP
+cd
+tree
