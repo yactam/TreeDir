@@ -10,6 +10,7 @@
 #include "../Headers/debug.h"
 
 noeud* init_program() {
+	debug("initialisation of the program.");
 	noeud* root = malloc(sizeof(noeud));
 	check_mem(root);
 	root->est_un_dossier = true;
@@ -25,7 +26,7 @@ error:
 
 /**********************************/
 void ls(noeud* n) {
-	debug("call to liste all children of node %s", (n != NULL ? n->nom : NULL));
+	debug("call to liste all children of node '%s'", (n != NULL ? n->nom : NULL));
 	if(n != NULL) {
 		liste(n->fils);
 	} else {
@@ -44,7 +45,7 @@ void pwd_helper(noeud* n, noeud* end) {
 }
 
 void pwd(noeud* n) {
-	debug("call to pwd in the node %s", (n != NULL ? n->nom : NULL));
+	debug("call to pwd in the node '%s'", (n != NULL ? n->nom : NULL));
 	if(n != NULL) {
 		pwd_helper(n, n);
 	} else {
@@ -54,7 +55,7 @@ void pwd(noeud* n) {
 
 /**********************************/
 noeud* cd(noeud* n, char* chem) {
-	debug("call to change directory from %s with path: %s", n->nom, chem);
+	debug("call to change directory from '%s' with path: '%s'", n->nom, chem);
 	check(chem != NULL && n != NULL && strcmp(chem, "/") != 0 && !estvide(chem), "the arguments of cd are incorrecte.");
 	parser* p = init(chem, '/');
 	noeud* ret = n;
@@ -62,15 +63,15 @@ noeud* cd(noeud* n, char* chem) {
 	if(*chem == '/') ret = n->racine;
 	while(hasNext(p)) {
 		s = next(p);
-		check(!estvide(s), "error in the path for cd: %s.", chem);
+		check(!estvide(s), "error in the path for cd: '%s'.", chem);
 		if(strcmp(s, ".") == 0) {
 			ret = ret;
 		} else if(strcmp(s, "..") == 0 ) {
 			ret = cd_parent(ret);
 		} else {
 			noeud* vers = find_liste(ret->fils, s);
-			check(vers != NULL, "the node %s in the path for cd doesn't exist.", s);
-			check(vers->est_un_dossier, "the node %s in path for the command cd is not a folder.", vers->nom);
+			check(vers != NULL, "the node '%s' in the path for cd doesn't exist.", s);
+			check(vers->est_un_dossier, "the node '%s' in path for the command cd is not a folder.", vers->nom);
 			ret = vers;
 		}
 		free_word(s);
@@ -87,7 +88,7 @@ error:
 /**********************************/
 // Pour la commande cd ..
 noeud* cd_parent(noeud* n) {
-	debug("call to cd to parent of node %s.", (n != NULL ? n->nom : NULL));
+	debug("call to cd to parent of node '%s'.", (n != NULL ? n->nom : NULL));
 	assert(n != NULL);
 	return n->pere;
 }
@@ -95,7 +96,7 @@ noeud* cd_parent(noeud* n) {
 /**********************************/
 // Pour la commande cd
 noeud* cd_racine(noeud* n) {
-	debug("call to cd to the root with node: %s", (n != NULL ? n->nom : NULL));
+	debug("call to cd to the root with node: '%s'", (n != NULL ? n->nom : NULL));
 	assert(n != NULL);
 	return n->racine;
 }
@@ -114,7 +115,7 @@ noeud* init_noeud() {
 /*********************************/
 noeud* add_noeud(noeud* n, char* nom, bool isDir) {
 	size_t len = strlen(nom);
-	check(len != 0 && len <= 99 && isalphanum(nom), "the name to add node is invalid: %s.", nom);
+	check(len != 0 && len <= 99 && isalphanum(nom), "the name to add node is invalid: '%s'.", nom);
 	noeud* f = init_noeud();
 	f->est_un_dossier = isDir;
 	check_mem(memcpy(f->nom, nom, len * sizeof(char)));
@@ -129,12 +130,12 @@ error:
 }
 
 noeud* mkdir(noeud* n, char* nom) {
-	debug("call to make directory in the node %s with name %s.", (n != NULL ? n->nom : NULL), nom); 
+	debug("call to make directory in the node '%s' with name '%s'.", (n != NULL ? n->nom : NULL), nom); 
 	return add_noeud(n, nom, true);
 }
 
 noeud* touch(noeud* n, char* nom) {
-	debug("call to touch file in the node %s with name %s.", (n != NULL ? n->nom : NULL), nom); 
+	debug("call to touch file in the node '%s' with name '%s'.", (n != NULL ? n->nom : NULL), nom); 
 	return add_noeud(n, nom, false);
 }
 
@@ -159,21 +160,21 @@ error:
 }
 
 noeud* rm(noeud* n, char* chem) {
-	debug("call to rm from node %s with path: %s.", (n != NULL ? n->nom : NULL), chem);
+	debug("call to rm from node '%s' with path: '%s'.", (n != NULL ? n->nom : NULL), chem);
 	check_mem(chem);
 	char* target = last(chem, '/');
-	debug("target to rm: %s.", target);
+	debug("target to rm: '%s'.", target);
 	noeud* tmp = find_target_parent(n, chem, target);
 	noeud* to_rm = find_liste(tmp->fils, target);
-	debug("to remove: %s, actual node: %s.", to_rm->nom, n->nom);
-	check(to_rm, "there is no node with name %s in node %s", to_rm->nom, tmp->nom);
+	debug("to remove: '%s', actual node: '%s'.", to_rm->nom, n->nom);
+	check(to_rm, "there is no node with name '%s' in node '%s'", to_rm->nom, tmp->nom);
 	check(!est_parent(to_rm, n), "the current node is included in the sub tree that will be deleted.");
 	for(liste_noeud* l = to_rm->fils; l != NULL; l = to_rm->fils) {
 		rm(to_rm, l->no->nom);
 	}
-	check(to_rm->fils == NULL, "the children of node %s need to be deleted.", to_rm->nom);
+	check(to_rm->fils == NULL, "the children of node '%s' need to be deleted.", to_rm->nom);
 	tmp->fils = remove_liste(tmp->fils, to_rm);
-	check(tmp->fils == NULL || find_liste(tmp->fils, to_rm->nom) == NULL, "the child %s was not deleted from %s.", to_rm->nom, tmp->nom);
+	check(tmp->fils == NULL || find_liste(tmp->fils, to_rm->nom) == NULL, "the child '%s' was not deleted from '%s'.", to_rm->nom, tmp->nom);
 	free(to_rm);
 	free(target);
 	tmp = n;
@@ -186,20 +187,20 @@ error:
 
 /************** cp ********************/
 noeud* cp(noeud* n, char* chem1, char* chem2) {
-	debug("call to cp in node %s from %s to %s.", (n != NULL ? n->nom : NULL), chem1, chem2);
+	debug("call to cp in node '%s' from '%s' to '%s'.", (n != NULL ? n->nom : NULL), chem1, chem2);
 	char* from = last(chem1, '/');
-	debug("source to cp name: %s.", from);
+	debug("source to cp name: '%s'.", from);
 	noeud* tmp = find_target_parent(n, chem1, from);
-	debug("parent folder of the source file: %s", tmp->nom);
+	debug("parent folder of the source file: '%s'", tmp->nom);
 	noeud* to_cp = find_liste(tmp->fils, from);
-	debug("to copy from node: %s", to_cp->nom);
+	debug("to copy from node: '%s'", to_cp->nom);
 	char* to = last(chem2, '/');
 	noeud* aux = find_target_parent(n, chem2, to);
-	debug("destination node to copy: %s", aux->nom);
+	debug("destination node to copy: '%s'", aux->nom);
 
-	check(aux->est_un_dossier, "the destination node for cp(%s) is not a directory.", aux->nom);
-	check(find_liste(aux->fils, to) == NULL, "there is a node with the same name as %s in destination node.", to);
-	check(!est_parent(to_cp, aux), "the node that you want to copy (%s) is included in the destination (%s).", to_cp->nom, aux->nom);
+	check(aux->est_un_dossier, "the destination node for cp('%s') is not a directory.", aux->nom);
+	check(find_liste(aux->fils, to) == NULL, "there is a node with the same name as '%s' in destination node.", to);
+	check(!est_parent(to_cp, aux), "the node that you want to copy ('%s') is included in the destination ('%s').", to_cp->nom, aux->nom);
 
 	noeud* cp_noeud = init_noeud();
 	cp_noeud->est_un_dossier = to_cp->est_un_dossier;
@@ -238,14 +239,35 @@ error:
 
 /**********************************/
 noeud* mv(noeud* n, char* chem1, char* chem2) {
-	n = cp(n, chem1, chem2);
-	n = rm(n, chem1);
+	debug("call to move in node '%s' from '%s' to '%s'.", (n != NULL ? n->nom : NULL), chem1, chem2);
+	char* from = last(chem1, '/');
+	debug("source to move name: '%s'.", from);
+	noeud* tmp = find_target_parent(n, chem1, from);
+	debug("parent folder of the source file: '%s'", tmp->nom);
+	noeud* to_mv = find_liste(tmp->fils, from);
+	debug("to move from node: '%s'", to_mv->nom);
+	char* to = last(chem2, '/');
+	noeud* aux = find_target_parent(n, chem2, to);
+	debug("destination node to move to: '%s'", aux->nom);
+
+	check(aux->est_un_dossier, "the destination node for mv('%s') is not a directory.", aux->nom);
+	check(find_liste(aux->fils, to) == NULL, "there is a node with the same name as '%s' in destination node.", to);
+	check(!est_parent(to_mv, aux), "the node that you want to copy ('%s') is included in the destination ('%s').", to_mv->nom, aux->nom);
+	
+	tmp->fils = remove_liste(tmp->fils, to_mv);
+	check_mem(strcpy(to_mv->nom, to));
+	to_mv->pere = aux;
+	aux->fils = add_liste(aux->fils, to_mv);
+
 	return n;
+error:
+	if(n) free_program(n->racine);
+	exit(EXIT_FAILURE);
 }
 
 /**********************************/
 void print(noeud* n) {
-	debug("call to print with node: %s", (n->pere == n) ? "/" : n->nom);
+	debug("call to print with node: '%s'", (n->pere == n) ? "/" : n->nom);
 	printf("Noeud %s ", (n->pere == n) ? "/" : n->nom);
 	if(n->est_un_dossier) printf("(D), ");
 	else printf("(F), ");
@@ -276,11 +298,12 @@ void tree_helper(noeud* n, char* padding) {
 }
 
 void tree(noeud* n) {
-	debug("call to tree with node: %s.", (n->pere == n) ? "/" : n->nom);
+	debug("call to tree with node: '%s'.", (n->pere == n) ? "/" : n->nom);
 	tree_helper(n, "");
 }
 /**********************************/
 void free_program(noeud* root) {
+	debug("call to free the program from node: '%s'", (root != NULL ? root->nom : NULL)); 
 	if(root) {
 		root = root->racine;
 		for(liste_noeud* f = root->fils; f != NULL; f = root->fils) {

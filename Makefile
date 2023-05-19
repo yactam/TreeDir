@@ -1,33 +1,30 @@
-all : treedir
+CC=gcc
+CFLAGS=-Wall -DNDEBUG $(OPTFLAGS)
+DEPS=$(wildcard Headers/*.h)
+SRCS=$(wildcard Sources/*.c)
+OBJS=$(patsubst Sources/%.c,Sources/%.o,$(SRCS))
+EXEC=treedir
 
-treedir : ./Sources/main.o ./Sources/commands.o ./Sources/liste_utils.o ./Sources/string_utils.o ./Sources/file_utils.o
-	gcc -Wall -DNDEBUG -g -o treedir ./Sources/main.o ./Sources/commands.o ./Sources/liste_utils.o ./Sources/string_utils.o ./Sources/file_utils.o
+all: $(EXEC)
 
-./Sources/main.o : ./Sources/main.c
-	gcc -Wall -DNDEBUG -g -o ./Sources/main.o -c ./Sources/main.c
+$(EXEC): $(OBJS) 
+	$(CC) $(CFLAGS) -o $(EXEC) $(OBJS)
 
-./Sources/file_utils.o : ./Sources/file_utils.c
-	gcc -Wall -DNDEBUG -g -o ./Sources/file_utils.o -c ./Sources/file_utils.c
+$(OBJS): $(SRCS) $(DEPS)
+	$(CC) $(CFLAGS) -o $@ -c $*.c
 
-./Sources/commands.o : ./Sources/commands.c
-	gcc -Wall -DNDEBUG -g -o ./Sources/commands.o -c ./Sources/commands.c 
+clean:
+	rm -rf ./Sources/*.o 2> log/makefile.log
+	rm $(EXEC) 2> log/makefile.log
+	rm -rf log/* 2> log/makefile.log
 
-./Sources/liste_utils.o : ./Sources/liste_utils.c
-	gcc -Wall -DNDEBUG -g -o ./Sources/liste_utils.o -c ./Sources/liste_utils.c 
-
-./Sources/string_utils.o : ./Sources/string_utils.c
-	gcc -Wall -DNDEBUG -g -o ./Sources/string_utils.o -c ./Sources/string_utils.c 
-
-clean :
-	rm ./Sources/*.o 2> log/makefile.log
-	rm treedir 2> log/makefile.log
-	rm valgrind* 2> log/makefile.log
+dev: CFLAGS=-g -Wall $(OPTFLAGS)
+dev: all
 
 valgrind:
 	valgrind --leak-check=full \
          --log-file=log/valgrind-out.txt \
 		 --track-origins=yes \
-         ./treedir Tests/$(ARGS) 2> log/prog_log.log
-
+         ./$(EXEC) $(ARGS) 2> log/program_log.log
 run:
-	./treedir Tests/$(ARGS) 2> log/prog_log.log
+	./treedir $(ARGS) 2> log/program_log.log

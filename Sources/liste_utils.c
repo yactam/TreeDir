@@ -17,19 +17,19 @@ void liste(liste_noeud* l) {
 }
 
 liste_noeud* create_liste(noeud* n) {
-	debug("create new liste for node %s to start a new list of children for %s", n->nom, n->pere->nom);
+	debug("create new liste with node '%s' to start a new list of children for '%s'", n->nom, n->pere->nom);
 	liste_noeud* l = malloc(sizeof(liste_noeud));
 	check_mem(l);
 	l->no = n;
 	l->succ = NULL;
 	return l;
 error:
-	log_error("failed to allocate memory to create liste with node %s", n->nom);
+	log_error("failed to allocate memory to create liste with node '%s'", n->nom);
 	return NULL;
 }
 
 liste_noeud* add_liste(liste_noeud* l, noeud* n) {
-	debug("try to add node %s to %s children", (n != NULL ? n->nom : NULL), (n != NULL ? n->pere->nom : NULL)); 
+	debug("try to add node '%s' to '%s' children", (n != NULL ? n->nom : NULL), (n != NULL ? n->pere->nom : NULL)); 
 	if(l == NULL) {
 		l = create_liste(n);
 		return l;
@@ -37,7 +37,7 @@ liste_noeud* add_liste(liste_noeud* l, noeud* n) {
 	liste_noeud* tmp = l;
 	while(tmp->succ != NULL) {
 		check(strcmp(tmp->no->nom, n->nom) != 0,\
-				"the node with name %s already exists in the list of children of %s.", n->nom, n->pere->nom)
+				"the node with name '%s' already exists in the list of children of '%s'.", n->nom, n->pere->nom)
 		tmp = tmp->succ;
 	}
 	tmp->succ = malloc(sizeof(liste_noeud));
@@ -50,7 +50,9 @@ error:
 	exit(1);
 }
 
-liste_noeud* remove_liste(liste_noeud* l, noeud* n) { 
+liste_noeud* remove_liste(liste_noeud* l, noeud* n) {
+	debug("call to remove node '%s' from the liste of children of '%s'.",\
+			(n != NULL ? n->nom : NULL), (l != NULL && l->no != NULL ? l->no->pere->nom : NULL));
 	if(l != NULL && n != NULL) {
 		liste_noeud* s = l;
 		if(l->no == n) {
@@ -67,10 +69,6 @@ liste_noeud* remove_liste(liste_noeud* l, noeud* n) {
 		prev->succ = prev->succ->succ;
 		free(s);
 	}
-	return l;
-}
-
-liste_noeud* rename_liste(liste_noeud* l, noeud* n, char name[100]) { // TODO
 	return l;
 }
 
