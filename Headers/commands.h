@@ -1,5 +1,5 @@
-#ifndef _COMMANDSH_
-#define _COMMANDSH_
+#ifndef __COMMANDS_H__
+#define __COMMANDS_H__
 
 #include <stdbool.h>
 
@@ -36,5 +36,6 @@ noeud* cp(noeud*, char*, char*);
 noeud* mv(noeud*, char*, char*);
 void print(noeud*);
 void tree(noeud*);
+void free_program(noeud*);
 
 #endif
